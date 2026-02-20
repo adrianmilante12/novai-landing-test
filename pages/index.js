@@ -23,7 +23,7 @@ export default function Home() {
 
       {/* External scripts */}
       <Script src="/scripts/scripts.js" strategy="afterInteractive" />
-      <Script src="https://unpkg.com/scrollreveal" strategy="afterInteractive" />
+      <Script src="https://unpkg.com/scrollreveal" strategy="lazyOnload" />
 
       {/* Components */}
       <Loader />
