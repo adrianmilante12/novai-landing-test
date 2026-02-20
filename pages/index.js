@@ -37,7 +37,6 @@ export default function Home() {
       </Head>
 
       {/* External scripts */}
-      <Script src="/scripts/scripts.js" strategy="afterInteractive" />
       <Script src="https://unpkg.com/scrollreveal" strategy="afterInteractive" />
 
       {/* Components */}
