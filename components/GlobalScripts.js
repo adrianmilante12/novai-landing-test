@@ -1,8 +1,18 @@
 import { useEffect } from "react";
-import ScrollReveal from "scrollreveal";
 
 export default function GlobalScripts() {
   useEffect(() => {
+    // --- ScrollReveal dynamically ---
+    import("scrollreveal").then(ScrollReveal => {
+      ScrollReveal.default().reveal(".reveal", {
+        distance: "60px",
+        duration: 1200,
+        easing: "ease-out",
+        origin: "bottom",
+        interval: 200
+      });
+    }).catch(err => console.log("ScrollReveal load error:", err));
+
     // --- FAQ toggle ---
     document.querySelectorAll(".faq-question").forEach(button => {
       button.addEventListener("click", () => {
@@ -10,15 +20,6 @@ export default function GlobalScripts() {
         answer.style.maxHeight =
           answer.style.maxHeight ? null : answer.scrollHeight + "px";
       });
-    });
-
-    // --- Scroll Reveal Animations ---
-    ScrollReveal().reveal(".reveal", {
-      distance: "60px",
-      duration: 1200,
-      easing: "ease-out",
-      origin: "bottom",
-      interval: 200
     });
 
     // --- 3D Floating Effect ---
@@ -33,22 +34,21 @@ export default function GlobalScripts() {
         const rotateY = (centerX - x) / 20;
         card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
       });
-
       card.addEventListener("mouseleave", () => {
         card.style.transform = "rotateX(0) rotateY(0)";
       });
     });
 
-    // --- Mobile Menu Toggle ---
+    // --- Mobile Menu ---
     const hamburger = document.getElementById("hamburger");
     const navMenu = document.getElementById("navMenu");
     if (hamburger && navMenu) {
       hamburger.addEventListener("click", () => {
         navMenu.classList.toggle("active");
       });
-      document.querySelectorAll("#navMenu a").forEach(link => {
-        link.addEventListener("click", () => navMenu.classList.remove("active"));
-      });
+      document.querySelectorAll("#navMenu a").forEach(link =>
+        link.addEventListener("click", () => navMenu.classList.remove("active"))
+      );
     }
 
     // --- Loading Screen ---
@@ -160,17 +160,12 @@ export default function GlobalScripts() {
         );
       }
 
-      grabBtn.addEventListener("mousedown", dragStart);
-      grabBtn.addEventListener("touchstart", dragStart, { passive: false });
-      grabBtn.addEventListener("click", closeSheet);
-
       function dragStart(e) {
         if (isClosing) return;
         isDragging = true;
         bottomSheet.style.transition = "none";
         startY = e.type.includes("touch") ? e.touches[0].pageY : e.pageY;
-        const computedStyle = window.getComputedStyle(bottomSheet);
-        const matrix = new WebKitCSSMatrix(computedStyle.transform);
+        const matrix = new WebKitCSSMatrix(window.getComputedStyle(bottomSheet).transform);
         sheetStart = matrix.m42 || 0;
         document.addEventListener("mousemove", onDrag);
         document.addEventListener("touchmove", onDrag, { passive: false });
@@ -194,20 +189,20 @@ export default function GlobalScripts() {
         document.removeEventListener("touchmove", onDrag);
         document.removeEventListener("mouseup", dragEnd);
         document.removeEventListener("touchend", dragEnd);
-        const computedStyle = window.getComputedStyle(bottomSheet);
-        const matrix = new WebKitCSSMatrix(computedStyle.transform);
+        const matrix = new WebKitCSSMatrix(window.getComputedStyle(bottomSheet).transform);
         const translateY = matrix.m42;
         bottomSheet.style.transition =
           "transform 0.4s cubic-bezier(0.25,1,0.5,1)";
-        if (translateY > 50) {
-          closeSheet();
-        } else {
-          bottomSheet.style.transform = "translateY(0)";
-        }
+        if (translateY > 50) closeSheet();
+        else bottomSheet.style.transform = "translateY(0)";
       }
+
+      grabBtn.addEventListener("mousedown", dragStart);
+      grabBtn.addEventListener("touchstart", dragStart, { passive: false });
+      grabBtn.addEventListener("click", closeSheet);
     }
 
-    // --- Carousel (optional: can be modularized if needed) ---
+    // --- Carousel (simple init, can be modularized) ---
     function initCarousel(wrapperSelector, dotsSelector) {
       const wrapper = document.querySelector(wrapperSelector);
       if (!wrapper) return;
@@ -220,7 +215,6 @@ export default function GlobalScripts() {
       let autoScroll;
 
       const realSlideCount = slides.length - 2;
-
       if (!dotsContainer) return;
       dotsContainer.innerHTML = "";
       for (let i = 0; i < realSlideCount; i++) {
@@ -276,13 +270,8 @@ export default function GlobalScripts() {
           updateDots();
         }, 3500);
       }
-      function stopAutoScroll() {
-        clearInterval(autoScroll);
-      }
-      function resetAutoScroll() {
-        stopAutoScroll();
-        startAutoScroll();
-      }
+      function stopAutoScroll() { clearInterval(autoScroll); }
+      function resetAutoScroll() { stopAutoScroll(); startAutoScroll(); }
 
       setPosition(false);
       updateDots();
@@ -292,6 +281,7 @@ export default function GlobalScripts() {
 
     initCarousel(".desktop-carousel", ".desktop-dots");
     initCarousel(".mobile-carousel", ".mobile-dots");
+
   }, []);
 
   return null;
