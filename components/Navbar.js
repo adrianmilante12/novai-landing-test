@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -8,36 +7,37 @@ export default function Navbar() {
   return (
     <header className="navbar">
       <div className="nav-content">
-
+        
         <div className="logo">
-          <Link href="/">
-            <img src="/images/logo.png" alt="Logo" />
-          </Link>
+          <a href="#"><img src="/images/logo.png" alt="Logo" /></a>
         </div>
 
-        <Link href="#get-started" className="btn-primary nav-right">
+        <a href="#get-started" className="btn-primary nav-right">
           Get Started
-        </Link>
+        </a>
 
-        {/* Menu */}
-        <div className={`nav-menu ${open ? "active" : ""}`}>
-          <Link href="#features" onClick={() => setOpen(false)}>Features</Link>
-          <Link href="/showcase" onClick={() => setOpen(false)}>Template</Link>
-          <Link href="#pricing" onClick={() => setOpen(false)}>Pricing</Link>
-          <Link href="#faq" onClick={() => setOpen(false)}>FAQ</Link>
+        {/* KEEP ID navMenu */}
+        <div id="navMenu" className={`nav-menu ${open ? "active" : ""}`}>
+          <a href="#features" onClick={() => setOpen(false)}>Features</a>
+          <a href="showcase.html" onClick={() => setOpen(false)}>Template</a>
+          <a href="#pricing" onClick={() => setOpen(false)}>Pricing</a>
+          <a href="#faq" onClick={() => setOpen(false)}>FAQ</a>
         </div>
 
-        {/* Hamburger */}
-        <div 
-          className={`hamburger ${open ? "open" : ""}`}
-          onClick={() => setOpen(!open)}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
+        <div className="nav-actions">
+          {/* KEEP ID hamburger */}
+          <div
+            id="hamburger"
+            className={`hamburger ${open ? "active" : ""}`}
+            onClick={() => setOpen(!open)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
 
       </div>
     </header>
   );
-  }
+              }
