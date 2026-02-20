@@ -1,31 +1,43 @@
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+
   return (
     <header className="navbar">
       <div className="nav-content">
-        
+
         <div className="logo">
-          <a href="#"><img src="/images/logo.png" alt="Logo" /></a>
+          <Link href="/">
+            <img src="/images/logo.png" alt="Logo" />
+          </Link>
         </div>
 
-        <a href="#get-started" className="btn-primary nav-right">Get Started</a>
+        <Link href="#get-started" className="btn-primary nav-right">
+          Get Started
+        </Link>
 
-        {/* Centered menu links for desktop */}
-        <div className="nav-menu">
-          <a href="#features">Features</a>
-          <a href="showcase.html">Template</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#faq">FAQ</a>
+        {/* Menu */}
+        <div className={`nav-menu ${open ? "active" : ""}`}>
+          <Link href="#features" onClick={() => setOpen(false)}>Features</Link>
+          <Link href="/showcase" onClick={() => setOpen(false)}>Template</Link>
+          <Link href="#pricing" onClick={() => setOpen(false)}>Pricing</Link>
+          <Link href="#faq" onClick={() => setOpen(false)}>FAQ</Link>
         </div>
 
-        <div className="nav-actions">
-          <div className="hamburger" id="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+        {/* Hamburger */}
+        <div 
+          className={`hamburger ${open ? "open" : ""}`}
+          onClick={() => setOpen(!open)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
 
       </div>
     </header>
   );
-}
+  }
