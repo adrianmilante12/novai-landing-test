@@ -1,2 +1,0 @@
-# novai-landing-test
-Test
