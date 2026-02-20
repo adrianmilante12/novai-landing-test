@@ -19,17 +19,17 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 800); // 0.8 seconds only
+    }, 800); // 0.8s
 
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
-    return <Loader />;
-  }
-
   return (
     <>
+       {loading ? (
+        <Loader />
+      ) : (
+        <>
       <Head>
         <title>NovaiTemplateCreator — Premium Starter Landing Pages</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -41,7 +41,7 @@ export default function Home() {
       <Script src="https://unpkg.com/scrollreveal" strategy="afterInteractive" />
 
       {/* Components */}
-      <div id="main-content" style={{ display: 'none' }}>
+
         <Navbar />
         <Bsheet />
         <Hero />
@@ -51,7 +51,8 @@ export default function Home() {
         <Pricing />
         <FAQ />
         <Footer />
-      </div>
+        </>
+      )}
     </>
   );
 }
