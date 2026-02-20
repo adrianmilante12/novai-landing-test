@@ -1,4 +1,4 @@
-export default function BottomSheet() {
+export default function Bsheet() {
   return (
     <div className="bottom-sheet" id="bottomSheet">
       {/* Close / Grab Button */}
