@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
 
@@ -13,6 +14,20 @@ import FAQ from '../components/FAQ';
 import Footer from '../components/Footer';
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800); // 0.8 seconds only
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <>
       <Head>
@@ -26,7 +41,6 @@ export default function Home() {
       <Script src="https://unpkg.com/scrollreveal" strategy="afterInteractive" />
 
       {/* Components */}
-      <Loader />
       <div id="main-content" style={{ display: 'none' }}>
         <Navbar />
         <Bsheet />
