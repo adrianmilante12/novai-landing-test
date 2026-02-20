@@ -2,28 +2,36 @@ import { useEffect } from "react";
 
 export default function GlobalScripts() {
   useEffect(() => {
-    // --- ScrollReveal dynamically ---
-    import("scrollreveal").then(ScrollReveal => {
-      ScrollReveal.default().reveal(".reveal", {
-        distance: "60px",
-        duration: 1200,
-        easing: "ease-out",
-        origin: "bottom",
-        interval: 200
-      });
-    }).catch(err => console.log("ScrollReveal load error:", err));
+    // ---------------- ScrollReveal (dynamic import) ----------------
+    import("scrollreveal")
+      .then(ScrollReveal => {
+        if (typeof window !== "undefined") {
+          ScrollReveal.default().reveal(".reveal", {
+            distance: "60px",
+            duration: 1200,
+            easing: "ease-out",
+            origin: "bottom",
+            interval: 200,
+          });
+        }
+      })
+      .catch(err => console.log("ScrollReveal load error:", err));
 
-    // --- FAQ toggle ---
-    document.querySelectorAll(".faq-question").forEach(button => {
+    // ---------------- FAQ Toggle ----------------
+    const faqButtons = document.querySelectorAll(".faq-question");
+    faqButtons.forEach(button => {
+      const answer = button.nextElementSibling;
+      if (!answer) return;
+
       button.addEventListener("click", () => {
-        const answer = button.nextElementSibling;
         answer.style.maxHeight =
           answer.style.maxHeight ? null : answer.scrollHeight + "px";
       });
     });
 
-    // --- 3D Floating Effect ---
-    document.querySelectorAll(".floating").forEach(card => {
+    // ---------------- 3D Floating Cards ----------------
+    const floatingCards = document.querySelectorAll(".floating");
+    floatingCards.forEach(card => {
       card.addEventListener("mousemove", e => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -39,40 +47,42 @@ export default function GlobalScripts() {
       });
     });
 
-    // --- Mobile Menu ---
+    // ---------------- Mobile Menu ----------------
     const hamburger = document.getElementById("hamburger");
     const navMenu = document.getElementById("navMenu");
     if (hamburger && navMenu) {
       hamburger.addEventListener("click", () => {
         navMenu.classList.toggle("active");
       });
-      document.querySelectorAll("#navMenu a").forEach(link =>
-        link.addEventListener("click", () => navMenu.classList.remove("active"))
-      );
+      document.querySelectorAll("#navMenu a").forEach(link => {
+        link.addEventListener("click", () => navMenu.classList.remove("active"));
+      });
     }
 
-    // --- Loading Screen ---
+    // ---------------- Loading Screen ----------------
     const loadingScreen = document.getElementById("loading-screen");
     const mainContent = document.getElementById("main-content");
-    window.addEventListener("load", () => {
-      if (!loadingScreen || !mainContent) return;
-      setTimeout(() => {
-        loadingScreen.style.opacity = "0";
-        loadingScreen.style.transition = "opacity 0.8s";
+    if (loadingScreen && mainContent) {
+      window.addEventListener("load", () => {
         setTimeout(() => {
-          loadingScreen.style.display = "none";
-          mainContent.style.display = "block";
-          document.body.style.overflow = "auto";
-        }, 800);
-      }, 2000);
-    });
+          loadingScreen.style.opacity = "0";
+          loadingScreen.style.transition = "opacity 0.8s";
+          setTimeout(() => {
+            loadingScreen.style.display = "none";
+            mainContent.style.display = "block";
+            document.body.style.overflow = "auto";
+          }, 800);
+        }, 2000);
+      });
+    }
 
-    // --- Particle Effect ---
+    // ---------------- Particle Effect ----------------
     const canvas = document.getElementById("particles");
     if (canvas) {
       const ctx = canvas.getContext("2d");
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+
       const particlesArray = [];
       const colors = ["#ff6ec4", "#7873f5", "#42e695", "#fff"];
 
@@ -121,7 +131,7 @@ export default function GlobalScripts() {
       });
     }
 
-    // --- Bottom Sheet ---
+    // ---------------- Bottom Sheet ----------------
     const bottomSheet = document.getElementById("bottomSheet");
     const grabBtn = document.getElementById("grabBtn");
     if (bottomSheet && grabBtn) {
@@ -202,20 +212,28 @@ export default function GlobalScripts() {
       grabBtn.addEventListener("click", closeSheet);
     }
 
-    // --- Carousel (simple init, can be modularized) ---
+    // ---------------- Carousel ----------------
     function initCarousel(wrapperSelector, dotsSelector) {
       const wrapper = document.querySelector(wrapperSelector);
       if (!wrapper) return;
+
       const track = wrapper.querySelector(".slides");
+      if (!track) return;
+
       const slides = Array.from(track.querySelectorAll(".slide"));
+      if (slides.length === 0) return;
+
       const dotsContainer = document.querySelector(dotsSelector);
+      if (!dotsContainer) return;
+
       const slidesWrapper = wrapper.querySelector(".slides-wrapper");
+      if (!slidesWrapper) return;
+
       const gap = parseInt(getComputedStyle(track).gap) || 12;
       let index = 1;
       let autoScroll;
 
       const realSlideCount = slides.length - 2;
-      if (!dotsContainer) return;
       dotsContainer.innerHTML = "";
       for (let i = 0; i < realSlideCount; i++) {
         const dot = document.createElement("span");
@@ -281,8 +299,7 @@ export default function GlobalScripts() {
 
     initCarousel(".desktop-carousel", ".desktop-dots");
     initCarousel(".mobile-carousel", ".mobile-dots");
-
   }, []);
 
   return null;
-          }
+  }
